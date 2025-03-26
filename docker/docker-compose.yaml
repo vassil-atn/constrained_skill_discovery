@@ -1,0 +1,50 @@
+# Here we set the parts that would
+# be re-used between services to an
+# extension field
+# https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields
+x-default-constrained-skill-discovery-lab-volumes: &default-constrained-skill-discovery-lab-volumes
+  # These volumes follow from this page
+  # https://docs.omniverse.nvidia.com/app_isaacsim/app_isaacsim/install_faq.html#save-isaac-sim-configs-on-local-disk
+  - type: volume
+    source: constrained-skill-discovery-lab-logs
+    target: ${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}/logs
+  - type: bind
+    source: ../
+    target: ${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}
+  # Add our packages so that changes are reflected:
+
+
+x-default-constrained-skill-discovery-lab-environment: &default-constrained-skill-discovery-lab-environment
+  - OMNI_KIT_ALLOW_ROOT=1
+
+x-default-constrained-skill-discovery-lab-deploy: &default-constrained-skill-discovery-lab-deploy
+  resources:
+    reservations:
+      devices:
+        - driver: nvidia
+          count: all
+          capabilities: [ gpu ]
+
+services:
+  constrained-skill-discovery-lab:
+    env_file: .env.base
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        - ISAACLAB_BASE_IMAGE_ARG=${ISAACLAB_BASE_IMAGE}
+        - DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH_ARG=${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}
+    image: constrained-skill-discovery-lab
+    container_name: constrained-skill-discovery-lab
+    volumes: *default-constrained-skill-discovery-lab-volumes
+    network_mode: host
+    environment: 
+      &default-constrained-skill-discovery-lab-environment
+    deploy: *default-constrained-skill-discovery-lab-deploy
+    # This is the entrypoint for the container
+    entrypoint: bash
+    stdin_open: true
+    tty: true
+
+volumes:
+  constrained-skill-discovery-lab-logs:

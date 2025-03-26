@@ -1,0 +1,181 @@
+seed: 42
+
+# Models are instantiated using skrl's model instantiator utility
+# https://skrl.readthedocs.io/en/develop/modules/skrl.utils.model_instantiators.html
+models:
+  separate: False
+  low_level_policy:  # see skrl.utils.model_instantiators.gaussian_model for parameter details
+    clip_actions: False
+    clip_log_std: True
+    initial_log_std: 0
+    min_log_std: -20.0
+    max_log_std: 2.0
+    input_shape: "Shape.STATES"
+    hiddens: [512, 256, 128]
+    hidden_activation: ["elu", "elu", "elu"]
+    output_shape: "Shape.ACTIONS"
+    output_activation: ""
+    output_scale: 1.0
+    squashed_normal: False
+    normalize_output_as_unit: False
+    state_dependent_std: False
+
+  high_level_policy:  # see skrl.utils.model_instantiators.gaussian_model for parameter details
+    clip_actions: False
+    clip_log_std: True
+    initial_log_std: 0
+    min_log_std: -20.0
+    max_log_std: 2.0
+    input_shape: "Shape.STATES"
+    hiddens: [512, 256, 128]
+    hidden_activation: ["relu", "relu", "relu"]
+    output_shape: "Shape.ACTIONS"
+    output_activation: ""
+    output_scale: 1.0
+    squashed_normal: False
+    normalize_output_as_unit: True
+    state_dependent_std: False
+
+  high_level_value:  # see skrl.utils.model_instantiators.deterministic_model for parameter details
+    clip_actions: False
+    input_shape: "Shape.STATES"
+    hiddens: [512, 256, 128]
+    hidden_activation: ["relu", "relu", "relu"]
+    output_shape: "Shape.ONE"
+    output_activation: ""
+    output_scale: 1.0
+  low_level_value:  # see skrl.utils.model_instantiators.deterministic_model for parameter details
+    clip_actions: False
+    input_shape: "Shape.STATES"
+    hiddens: [512, 256, 128]
+    hidden_activation: ["elu", "elu", "elu"]
+    output_shape: "Shape.ONE"
+    output_activation: ""
+    output_scale: 1.0
+
+# PPO agent configuration (field names are from PPO_DEFAULT_CONFIG)
+# https://skrl.readthedocs.io/en/latest/modules/skrl.agents.ppo.html
+agent:
+  rollouts: 24
+  learning_epochs: 15
+  mini_batches: 4
+  discount_factor: 0.99
+  lambda: 0.95
+  learning_rate: 1.e-4
+  learning_rate_scheduler: "KLAdaptiveLR"
+  learning_rate_scheduler_kwargs:
+    kl_threshold: 0.008
+    min_lr: 1.e-5
+  low_level_state_preprocessor: None
+  low_level_state_preprocessor_kwargs: null
+  low_level_value_preprocessor: RunningStandardScaler #"RunningStandardScaler"
+  low_level_value_preprocessor_kwargs: null
+  high_level_state_preprocessor: None
+  high_level_state_preprocessor_kwargs: null
+  high_level_value_preprocessor: RunningStandardScaler #"RunningStandardScaler"
+  high_level_value_preprocessor_kwargs: null
+  curiosity_preprocessor:  None #"RunningStandardScaler"
+  curiosity_preprocessor_kwargs: null
+  
+  random_timesteps: 0
+  learning_starts: 0
+  grad_norm_clip: 1.0
+  ratio_clip: 0.2
+  value_clip: 0.2
+  clip_predicted_values: True
+  entropy_loss_scale: 0.01
+  value_loss_scale: 1.0
+  kl_threshold: 0
+  rewards_shaper_scale: 1.0
+  # curiosity modules:
+  use_curiosity: False
+  curiosity_lr: 5.e-4
+  curiosity_scale: 0.1
+  anneal_curiosity: False
+  anneal_curiosity_warmup: 20000
+  anneal_curiosity_end: 50000
+  curiosity_observation_type: "debugLSD"
+  curiosity_beta: 0.1
+  curiosity_epochs: 5
+  curiosity_mini_batches: 12
+
+
+  train_high_level: False
+  train_low_level: True
+  load_low_level_policy: False
+  low_level_policy_path: "/2024-09-25_12-00-39/checkpoints/agent_25000.pt"
+
+  high_level_action_frequency: 0 # 0 means high level action is taken at every step
+
+
+  episode_length: 360
+  
+  skill_discovery: True
+  skill_discovery_epochs: 4
+  pretrain_normalizers: False
+  intrinsic_reward_scale: 1.
+  extrinsic_reward_scale: 1.
+  sd_specific_state_ind: "None"
+  # [0,1,2,3,4,5,6,7,8,9,13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+      #  30, 31, 32, 33, 34, 35, 36, 236,237,238] #null
+  # sd_specific_state_ind: [0,1,2,3,4,5,6,7,8,9,13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+      #  30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 257,258,259, 260, 261, 262, 263, 264, 265] #null
+  # sd_specific_state_ind: [260,261,262,263,264,265]
+  load_curiosity_preprocesor_params: False
+  evaluate_envs: True
+  evaluate_envs_num: 200
+  evaluate_envs_interval: 1000
+
+  # alpha_reg: 0.0
+  # alpha_reg_step: 5.e-6
+  delay_actions: False
+
+
+  on_policy_rewards: True
+
+  dual_optimisation: True
+  dual_lambda: 1.
+  dual_lambda_lr: 5.e-4
+  dual_lambda_sk_constraint: 1.
+  dual_slack: 1.e-6
+  skill_discovery_distance_metric: "one"
+  learn_dual_lambda: True
+  curiosity_obs_space: 0
+  lsd_lr: 5.e-4
+  encoder_dims: [256,128,64] #[512,256,128,64]
+  # tanh_output: True
+  # encoder_scale: 50.
+  sd_version: "MSE"
+  sd_mini_batches: 4
+  loss_intr_rew_scale: 0.25
+  lsd_loss_scale: 1.0
+  lsd_norm_clip: 50.0
+
+  contrastive_skill_discovery: False
+  domino: False
+
+  succ_feat_gamma: 0.98
+  succ_feat_lr: 5.e-3
+  use_lsd_model_features: False
+  
+  train_RND: False
+  RND_lr: 5.e-5
+  RND_reward_scale: 1.0
+  RND_specific_state_ind: [0,1]
+
+  # logging and checkpoint
+  experiment:
+    directory: "ant"
+    experiment_name: ""
+    write_interval: 5
+    checkpoint_interval: 1000
+    wandb: False             # whether to use Weights & Biases
+    wandb_kwargs: {}          # wandb kwargs (see https://docs.wandb.ai/ref/python/init)
+
+
+
+# Sequential trainer
+# https://skrl.readthedocs.io/en/latest/modules/skrl.trainers.sequential.html
+trainer:
+  timesteps: 50000
+  init_at_random_ep_len: True

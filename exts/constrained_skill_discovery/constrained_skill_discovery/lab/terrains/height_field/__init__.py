@@ -1,0 +1,1 @@
+from .maze_terrain import HfMazeTerrainCfg

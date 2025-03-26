@@ -1,0 +1,161 @@
+seed: 44
+models:
+  separate: false
+  low_level_policy:
+    clip_actions: false
+    clip_log_std: true
+    initial_log_std: 0
+    min_log_std: -20.0
+    max_log_std: 2.0
+    input_shape: Shape.STATES
+    hiddens:
+    - 512
+    - 256
+    - 128
+    hidden_activation:
+    - mish
+    - mish
+    - mish
+    output_shape: Shape.ACTIONS
+    output_activation: ''
+    output_scale: 1.0
+    squashed_normal: false
+    normalize_output_as_unit: false
+    state_dependent_std: false
+  high_level_policy:
+    clip_actions: false
+    clip_log_std: true
+    initial_log_std: 0
+    min_log_std: -20.0
+    max_log_std: 2.0
+    input_shape: Shape.STATES
+    hiddens:
+    - 512
+    - 256
+    - 128
+    hidden_activation:
+    - mish
+    - mish
+    - mish
+    output_shape: Shape.ACTIONS
+    output_activation: ''
+    output_scale: 1.0
+    squashed_normal: false
+    normalize_output_as_unit: false
+    state_dependent_std: false
+  high_level_value:
+    clip_actions: false
+    input_shape: Shape.STATES
+    hiddens:
+    - 512
+    - 256
+    - 128
+    hidden_activation:
+    - mish
+    - mish
+    - mish
+    output_shape: Shape.ONE
+    output_activation: ''
+    output_scale: 1.0
+  low_level_value:
+    clip_actions: false
+    input_shape: Shape.STATES
+    hiddens:
+    - 512
+    - 256
+    - 128
+    hidden_activation:
+    - mish
+    - mish
+    - mish
+    output_shape: Shape.ONE
+    output_activation: ''
+    output_scale: 1.0
+agent:
+  rollouts: 24
+  learning_epochs: 15
+  mini_batches: 4
+  discount_factor: 0.99
+  lambda: 0.95
+  learning_rate: 0.0003
+  learning_rate_scheduler: KLAdaptiveLR
+  learning_rate_scheduler_kwargs:
+    kl_threshold: 0.008
+    min_lr: 1.0e-05
+  low_level_state_preprocessor: None
+  low_level_state_preprocessor_kwargs: null
+  low_level_value_preprocessor: None
+  low_level_value_preprocessor_kwargs: null
+  high_level_state_preprocessor: None
+  high_level_state_preprocessor_kwargs: null
+  high_level_value_preprocessor: None
+  high_level_value_preprocessor_kwargs: null
+  curiosity_preprocessor: RunningStandardScaler
+  curiosity_preprocessor_kwargs: null
+  random_timesteps: 0
+  learning_starts: 0
+  grad_norm_clip: 1.0
+  ratio_clip: 0.2
+  value_clip: 0.2
+  clip_predicted_values: true
+  entropy_loss_scale: 0.0001
+  value_loss_scale: 1.0
+  kl_threshold: 0
+  rewards_shaper_scale: 1.0
+  use_curiosity: false
+  curiosity_lr: 0.0005
+  curiosity_scale: 0.1
+  anneal_curiosity: false
+  anneal_curiosity_warmup: 20000
+  anneal_curiosity_end: 50000
+  curiosity_observation_type: debugLSD
+  curiosity_beta: 0.1
+  curiosity_epochs: 5
+  curiosity_mini_batches: 12
+  train_high_level: false
+  train_low_level: true
+  load_low_level_policy: false
+  low_level_policy_path: /2024-09-27_14-33-18/checkpoints/agent_50000.pt
+  high_level_action_frequency: 1
+  episode_length: 300
+  skill_discovery: true
+  skill_discovery_epochs: 4
+  pretrain_normalizers: false
+  intrinsic_reward_scale: 0.1
+  extrinsic_reward_scale: 0.1
+  sd_specific_state_ind: None
+  load_curiosity_preprocesor_params: false
+  evaluate_envs: true
+  evaluate_envs_num: 200
+  evaluate_envs_interval: 1000
+  delay_actions: false
+  on_policy_rewards: true
+  dual_optimisation: true
+  dual_lambda: 1.0
+  dual_lambda_lr: 0.0005
+  dual_slack: 1.0e-06
+  skill_discovery_distance_metric: one
+  learn_dual_lambda: true
+  curiosity_obs_space: 0
+  lsd_lr: 0.0005
+  encoder_dims:
+  - 256
+  - 128
+  - 64
+  sd_version: MSE
+  sd_mini_batches: 4
+  loss_intr_rew_scale: 0.25
+  lsd_loss_scale: 1.0
+  lsd_norm_clip: 100.0
+  experiment:
+    directory: /workspace/isaaclab_extension_template/logs/skrl/anymal
+    experiment_name: 2025-03-25_23-32-26
+    write_interval: 5
+    checkpoint_interval: 1000
+    wandb: false
+    wandb_kwargs: {}
+  skill_space: 3
+  discrete_skills: false
+trainer:
+  timesteps: 50000
+  init_at_random_ep_len: true

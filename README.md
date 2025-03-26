@@ -147,13 +147,13 @@ python scripts/skrl_sd/goal_tracking_task.py --task "Anymal-Skill-Discovery-D-Hi
 To visualise the skills of a trained 2D skill policy using Euclidean (L2) distance:
 
 ```bash
-python scripts/skrl_sd/run_learned_skills.py --task "Anymal-Skill-Discovery-D-Hierarchical-PLAY" --num_envs 1 --checkpoint "logs/skrl/anymal/2d_l2_normalised/checkpoints/agent_50000.pt" --max_magnitude 1. --skill_discovery_distance_metric "l2" --normalise_encoder_states 1 --skill_dim 2
+python scripts/skrl_sd/run_learned_skills.py --task "Anymal-Skill-Discovery-D-Hierarchical-PLAY" --num_envs 200 --checkpoint "logs/skrl/anymal/2d_l2_normalised/checkpoints/agent_50000.pt" --max_magnitude 1. --skill_discovery_distance_metric "l2" --normalise_encoder_states 1 --skill_dim 2
 ```
 
 To visualise the skills of a trained 2D skill policy using Temporal distance:
 
 ```bash
-python scripts/skrl_sd/run_learned_skills.py --task "Anymal-Skill-Discovery-D-Hierarchical-PLAY" --num_envs 1 --checkpoint "logs/skrl/anymal/2d_temporal_normalised/checkpoints/agent_50000.pt" --max_magnitude 1. --skill_discovery_distance_metric "one" --normalise_encoder_states 1 --skill_dim 2
+python scripts/skrl_sd/run_learned_skills.py --task "Anymal-Skill-Discovery-D-Hierarchical-PLAY" --num_envs 200 --checkpoint "logs/skrl/anymal/2d_temporal_normalised/checkpoints/agent_50000.pt" --max_magnitude 1. --skill_discovery_distance_metric "one" --normalise_encoder_states 1 --skill_dim 2
 ```
 
 ## Troubleshooting
